@@ -1,4 +1,4 @@
-#import "colours.typ": palette
+#import "palettes.typ": palette
 
 #let tables(
   colour-scheme: "red",
@@ -50,6 +50,7 @@
   )
 
   block(
+    spacing: 1in/2,
     stroke: if (border) { 2pt + colsc.tx } else { none },
     table(
       fill: (x, y) => if (mode == "hv") {

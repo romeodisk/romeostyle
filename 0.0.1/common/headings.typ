@@ -1,4 +1,4 @@
-#import "colours.typ": palette
+#import "palettes.typ": palette
 
 #let headingGrad(col1, col2) = gradient.linear(angle: 90deg, col1, col2)
 

@@ -1,5 +1,5 @@
 #import "common/callouts-examples.typ": *
-#import "common/colours.typ": palette
+#import "common/palettes.typ": palette
 #import "common/daterenderer.typ": datecoloursquare
 #import "common/icons.typ": *
 #import "common/headings.typ": callHeading
@@ -28,6 +28,7 @@
   raw-font-scale: 1,
   math-font-scale: 6 / 5,
   bib-font-scale: 5 / 6,
+  background-desaturate: false,
 
   // ELEMENT OPTIONS
   heading-numbering: "1.1.1",
@@ -127,6 +128,10 @@
     leading: 0.75em * line-spacing,
     spacing: 2em * par-spacing,
   )
+
+  #{colsc.bg = if(background-desaturate) {
+    color.mix((colsc.bg, 100%/3), (white, 200%/3))
+  } else {colsc.bg}}
 
   // PAGE
   #let marginval = 0.5in
