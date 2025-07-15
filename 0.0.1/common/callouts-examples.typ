@@ -91,6 +91,8 @@
 #show heading: hi => {defcounter.update(0); hi }
 #set heading(numbering: "1.1.1")
 #let definition(
+  title: "Definition",
+  numbered: true,
   colour-scheme: "grey",
   icon: "dictionary",
   alignment: horizon + left,
@@ -99,7 +101,7 @@
 ) = [
   #let colsc = if (colour-scheme in palette.keys()) { palette.at(colour-scheme) } else { palette.at("default") }
   #let laacgrad = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
-  #defcounter.step()
+  #if(numbered){defcounter.step()}
   #show: align.with(center)
   #block(
     width: width - 1.5pt,
@@ -128,7 +130,7 @@
         none,
       ),
       grid.cell(fill: gradient.linear(angle: 90deg, colsc.bg, colsc.it.mix(colsc.bg)))[
-        #text(1.25em)[#iconloader(icon) #smallcaps[#strong[Definition #context counter(heading).get().at(0)-#context defcounter.display()]]] \
+        #text(1.25em)[#iconloader(icon) #smallcaps[#strong[#title #if(numbered){[#context counter(heading).get().at(0)-#context defcounter.display()]}]]] \
         #body
       ],
     )

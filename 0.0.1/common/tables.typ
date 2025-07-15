@@ -1,6 +1,7 @@
 #import "palettes.typ": palette
 
 #let tables(
+  justify: true,
   colour-scheme: "red",
   mode: "none",
   alternating: "none",
@@ -9,17 +10,19 @@
   gutter: (),
   column-gutter: (),
   row-gutter: (),
-  alignment: auto,
+  alignment: horizon+center,
   stroke: auto,
   border: false,
   inset: 0% + 5pt,
   ..children,
 ) = {
-  show: align.with(center)
-
+  show: if(justify) {
+    align.with(center)
+  } else {
+    align.with(left)
+  }
   colour-scheme = if (colour-scheme not in palette.keys()) { "default" } else { colour-scheme }
   let colsc = palette.at(colour-scheme)
-
   show table.cell: tc => if (mode == "h") {
     if (tc.x == 0) {
       set text(fill: colsc.bg, weight: "bold")
@@ -36,7 +39,6 @@
       tc
     } else { tc }
   } else { tc }
-
   let alternator(x, y) = (
     if (alternating) == "h" {
       if (calc.even(y)) { return colsc.it } else { return colsc.bg }
@@ -48,9 +50,9 @@
       return colsc.bg
     }
   )
-
   block(
-    spacing: 1in/2,
+    above: 3em/2,
+    below: 4em/2,
     stroke: if (border) { 2pt + colsc.tx } else { none },
     table(
       fill: (x, y) => if (mode == "hv") {
@@ -71,7 +73,7 @@
         } else {
           alternator(x, y)
         }
-      },
+      } else { alternator(x, y) },
       columns: columns,
       rows: rows,
       gutter: gutter,

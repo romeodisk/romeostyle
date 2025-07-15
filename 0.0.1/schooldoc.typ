@@ -21,7 +21,7 @@
   margin-mode: "standard",
   doc-columns: 1,
   colour-scheme: "default",
-  font-family: "Romeosevka",
+  font-family: "RomeosevkaQP",
   font-size: 12pt,
   line-spacing: 1,
   par-spacing: 1,
@@ -52,7 +52,7 @@
   // DATA PROCESSING
   // TEXT
   #set text(
-    font: (font-family, "Romeosevka", "Iosevka SS04"),
+    font: (font-family, "RomeosevkaQP", "Iosevka SS04"),
     size: font-size,
     fill: colsc.tx,
   )
@@ -236,7 +236,7 @@
       scales: heading-scales,
       style: heading-style,
       none,
-      text(size: 2em * 0.75, (icon("book"))),
+      text(size: 2em * 0.75, (icon(offset: 5em/12, "book"))),
       none,
       palette.at(colour-scheme),
       1,
@@ -279,7 +279,7 @@
     #if(title != ""){[#emph[#icon("docs") #title]]}
     #if(subject != "" or title != ""){linebreak()}
     #if(code != ""){[#box(move(dy: 1pt, icon("code"))) #raw(code) •]}
-    #icon("calendar_clock") #date.display("[day padding:zero] [month repr:short] [year repr:full]") #datecoloursquare(date, font-size * 1.125)
+    #icon("calendar_clock") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
     #line(length: 100%)
   ]
   

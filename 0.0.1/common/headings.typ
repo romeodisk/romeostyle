@@ -13,7 +13,7 @@
   scale: 1,
 ) = [
   #block(
-    spacing: 1em,
+    above: 3em/2, below: 1em,
     stroke: (y: 1pt + col1),
     inset: (y: 2pt),
   )[
@@ -72,7 +72,7 @@
   scale: 1,
 ) = [
   #block(
-    spacing: 1em,
+    above: 3em/2, below: 1em,
   )[
     #set text(1em * scale, weight: 900, fill: tcol)
     #grid(
@@ -127,7 +127,7 @@
 ) = [
 
   #block(
-    spacing: 1em,
+    above: 3em/2, below: 1em,
     stroke: (bottom: 2pt + tcol),
     inset: (y: 2pt),
   )[
@@ -187,7 +187,7 @@
 
   #show: align.with(horizon);
   #block(
-    spacing: 1em,
+    above: 3em/2, below: 1em,
     stroke: (y: 1pt + tcol),
     inset: (y: 2pt),
   )[
@@ -208,7 +208,6 @@
   scale: 1,
   body,
 ) = {
-  show: align.with(horizon)
   block(spacing: 1em)[
     #set text(size: 1em * scale, weight: 700);
     #prefix#number #body

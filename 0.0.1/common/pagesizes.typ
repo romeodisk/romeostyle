@@ -12,6 +12,8 @@
   "phone": (7in, 14in),
   "pc": (16in, 9in),
   "auto": (8in, auto),
+  "square": (8in, 8in),
+  "crosswise": (8.5in, 6.5in)
 )
 
 #let margins = (

@@ -1,7 +1,7 @@
-#let icon(name) = text(
+#let icon(offset: 0em, name) = text(
   font: "Material Symbols Outlined Filled",
   size: 5em/6,
-  baseline: 5em/72,
+  baseline: 5em/72 + offset,
   features: (("FILL": 1)),
   top-edge: "baseline",
   bottom-edge: "baseline",
