@@ -325,15 +325,15 @@
     }
   } else if (style == "lines") {
     if (level == 1) {
-      return lineHeading(body, tcol: colsc.bg, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
+      return lineHeading(body, tcol: colsc.tx, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
     } else if (level == 2) {
-      return lineHeading(body, tcol: colsc.bg, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
+      return lineHeading(body, tcol: colsc.tx, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
     } else if (level == 3) {
-      return lineHeading(body, tcol: colsc.bg, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
-    } else if (level == 3 + 1) { return inlineLineHeading(body, tcol: colsc.bg, prefix: prefix, number: num, format: numformat) } else if (
+      return lineHeading(body, tcol: colsc.tx, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
+    } else if (level == 3 + 1) { return inlineLineHeading(body, tcol: colsc.tx, prefix: prefix, number: num, format: numformat) } else if (
       level == 3 + 2
-    ) { return inlineLineHeading(body, tcol: colsc.bg, prefix: prefix, number: num, format: numformat) } else if (level == 3 + 3) {
-      return inlineLineHeading(body, tcol: colsc.bg, prefix: prefix, number: num, format: numformat)
+    ) { return inlineLineHeading(body, tcol: colsc.tx, prefix: prefix, number: num, format: numformat) } else if (level == 3 + 3) {
+      return inlineLineHeading(body, tcol: colsc.tx, prefix: prefix, number: num, format: numformat)
     } else if (level >= 3 + 4) { return inlineLineHeading(body, tcol: colsc.tx, prefix: prefix, number: num, format: numformat) }
   } else {
     if (level == 1) { return plainHeading(body, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat) } else if (level == 2) {

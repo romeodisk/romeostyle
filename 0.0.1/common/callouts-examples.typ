@@ -23,7 +23,8 @@
     align: center,
     inset: 0em,
     grid.cell(block(
-      height: 7em/3,
+      breakable: false,
+      height: auto,
       stroke: if(border){(bottom: none, rest: 1pt + laacgrad)} else {none},
       fill: laacgrad,
       inset: 2em/3,
@@ -35,6 +36,7 @@
       ],
     )),
     grid.cell(block(
+      breakable: false,
       fill: gradient.linear(angle: 90deg, colsc.it.mix(colsc.bg), colsc.it),
       stroke: if(border){(top: none, rest: 1pt + laacgrad)} else {none},
       inset: 2em/3,

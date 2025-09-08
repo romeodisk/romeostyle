@@ -34,6 +34,7 @@
   heading-numbering: "1.1.1",
   heading-prefix: none,
   heading-style: "block",
+  heading-supplement: "Chapter",
   heading-scales: (1.5, 1.25, 1.125),
   outline-title: "Table of Contents",
   outline-columns: 1,
@@ -74,12 +75,12 @@
   #show raw.where(block: true): rawblock => {
     show raw.line: rl => {
       block(radius: 1em, spacing: -0.75em / 2, width: 100%, inset: 0em, grid(
-        columns: (2em, 1fr),
+        columns: (if(not flags.contains("no-raw-linenumbers")){2em}else{0em}, 1fr),
         rows: 4em / 3,
         inset: (y: 0em, x: 0.5em),
         align: (horizon + right, horizon + left),
         fill: if (calc.even(rl.number)) { colsc.bg } else { colsc.it.mix(colsc.bg).mix(colsc.bg) },
-        [#text(fill: colsc.ac, size: 2em / 3)[#rl.number]], rl.body,
+        [#if(not flags.contains("no-raw-linenumbers")){[#text(fill: colsc.ac, size: 2em / 3)[#rl.number]]}], rl.body,
       ))
     }
     rawblock
@@ -101,7 +102,7 @@
   // MATH TEXT
   #show math.equation: set text(
     font: "New Computer Modern Math",
-    size: font-size * 1.125,
+    size: font-size * 1.125 ,
   )
   #show math.equation.where(block: true): set text(
     size: font-size * math-font-scale,
@@ -122,6 +123,8 @@
     body,
   )
 
+  #show ref: set text(fill: colsc.ac)
+
   // PARAGRAPHS
   #set par(
     justify: true,
@@ -138,10 +141,14 @@
   #set page(
     fill: colsc.bg,
     columns: doc-columns,
-    width: pagesizes.at(paper).at(0),
-    height: pagesizes.at(paper).at(1),
+    width: if(not (type(paper) == array and paper.len() == 2)) {
+      pagesizes.at(paper, default: pagesizes.shortbond).at(0)
+    } else {paper.at(0)},
+    height: if(not (type(paper) == array and paper.len() == 2)) {
+      pagesizes.at(paper, default: pagesizes.shortbond).at(1)
+    } else {paper.at(1)},
     margin: margins.at(margin-mode),
-    footer: align(bottom, move(
+    footer: if(not flags.contains("nofoot")){align(bottom, move(
       dx: if(margin-mode == "sunshine") { -1in }
       else if (margin-mode == "pati") { -1.5in }
       else {-0.5in},
@@ -167,11 +174,11 @@
       ]
       #h(1fr)
       #text(weight: 900, context counter(page).display())
-    ])),
+    ]))},
   )
 
   // potentially saved hundreds of lines by offloading heading styling to a different file
-  #set heading(numbering: heading-numbering)
+  #set heading(numbering: heading-numbering, supplement: heading-supplement)
   #show heading: it => callHeading(
     scales: heading-scales,
     style: heading-style,
@@ -204,7 +211,7 @@
 
   #show outline: out => {
     show heading: none
-    callHeading(none, text(2em * 0.75, icon("toc")), none, palette.at(colour-scheme), 1, align(center, text(
+    callHeading(none, text(2em * 0.75, icon(offset: 5em/12, "toc")), none, palette.at(colour-scheme), 1, align(center, text(
       size: 1.5em,
       outline.title,
     )))
@@ -253,7 +260,7 @@
   // TABLES all handled by common/tables.typ
 
   // DOCUMENT HEADER
-  #[
+  #if(not flags.contains("noheader")){[
     #show: align.with(center)
     #[
       #set text(fill: colsc.bg)
@@ -265,8 +272,8 @@
             #strong[#aut]
             #if(section != "" and flags.contains("showsection")){emph[#"- "#section]}
             ];
-          linebreak()
-        }
+          h(1em)
+        }; linebreak()
       } else {exhl(authorhl)[
         #icon("person")
         #strong[#author]
@@ -277,11 +284,11 @@
     #if(subject != ""){[#strong[#icon("school") #smallcaps[#subject]]]}
     #if(subject != "" and title != ""){[•]}
     #if(title != ""){[#emph[#icon("docs") #title]]}
-    #if(subject != "" or title != ""){linebreak()}
-    #if(code != ""){[#box(move(dy: 1pt, icon("code"))) #raw(code) •]}
-    #icon("calendar_clock") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
+    #if((subject != "" or title != "") and not flags.contains("compact-header")){linebreak()} else if (flags.contains("compact-header")) {"•"}
+    #if(code != ""){[#box(move(dy: 1pt, icon("tag"))) #raw(code) •]}
+    #icon("calendar_month") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
     #line(length: 100%)
-  ]
+  ]}
   
   // DOCUMENT METADATA
   #let document-authors = ()
