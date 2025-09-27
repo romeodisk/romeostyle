@@ -33,8 +33,23 @@
       set text(fill: colsc.bg, weight: "bold")
       tc
     } else { tc }
+  } else if (mode == "v2") {
+    if (tc.y <= 1) {
+      set text(fill: colsc.bg, weight: "bold")
+      tc
+    } else { tc }
   } else if (mode == "hv") {
     if (tc.x == 0 or tc.y == 0) {
+      set text(fill: colsc.bg, weight: "bold")
+      tc
+    } else { tc }
+  } else if (mode == "hv2") {
+    if (tc.x == 0 or tc.y <= 1) {
+      set text(fill: colsc.bg, weight: "bold")
+      tc
+    } else { tc }
+  } else if (mode == "hv3") {
+    if (tc.x == 0 or tc.y <= 2) {
       set text(fill: colsc.bg, weight: "bold")
       tc
     } else { tc }
@@ -57,6 +72,18 @@
     table(
       fill: (x, y) => if (mode == "hv") {
         if (x == 0 or y == 0) {
+          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+        } else {
+          alternator(x, y)
+        }
+      } else if (mode == "hv2") {
+        if (x == 0 or y <= 1) {
+          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+        } else {
+          alternator(x, y)
+        }
+      } else if (mode == "hv3") {
+        if (x == 0 or y <= 2) {
           if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
         } else {
           alternator(x, y)
@@ -88,3 +115,13 @@
     ),
   )
 }
+
+
+#let accentcell(colspan: 1, rowspan: 1, colour-scheme, body) = table.cell(
+  colspan: colspan,
+  rowspan: rowspan,
+  fill: gradient.linear(palette.at(colour-scheme).la, palette.at(colour-scheme).ac, angle: 90deg),
+  [#set text(palette.at(colour-scheme).bg)
+  #body
+  ]
+)

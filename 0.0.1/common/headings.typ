@@ -175,6 +175,7 @@
 #let bookHeading(
   number: context counter(heading).display(),
   format: "1.1.1",
+  supplement: "",
   prefix: none,
   body,
   col1: palette.grey.ac,
@@ -184,7 +185,7 @@
   stroke: (y: 1pt + col1),
   inset: (y: 3pt),
 )[
-
+  #set text(1em * scale, weight: 900)
   #show: align.with(horizon);
   #block(
     above: 3em/2, below: 1em,
@@ -194,9 +195,9 @@
     #grid(
       inset: (1em / 2),
       columns: (auto, 1fr),
-      align: horizon,
-      grid.cell(fill: none, stroke: (right: stroke(dash: "dotted", thickness: 1pt, paint: tcol)))[#prefix#number],
-      grid.cell(fill: none)[#body],
+      align: horizon+center,
+      grid.cell(fill: none, stroke: (right: stroke(dash: "dotted", thickness: 1pt, paint: tcol)))[#if(supplement != ""){[#set text(0.5em); #supplement#v(-3.5em) ]}#prefix#number],
+      grid.cell(fill: none)[#set text(1.125em);#body],
     )
   ]
 ]
@@ -228,6 +229,7 @@
 #let callHeading(
   style: "block",
   scales: (1.5, 1.25, 1.125),
+  supplement: "",
   prefix,
   num,
   numformat,
@@ -236,7 +238,7 @@
   body,
 ) = {
   if (style == "book" and level == 1) {
-    return bookHeading(body, col1: colsc.ac, tcol: colsc.tx, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat)
+    return bookHeading(body, col1: colsc.ac, tcol: colsc.tx, prefix: prefix, scale: scales.at(level - 1), number: num, format: numformat, supplement: supplement)
   } else if (style in ("block", "book")) {
     if (level == 1) {
       return blockHeading(

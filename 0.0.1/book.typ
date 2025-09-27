@@ -4,14 +4,12 @@
 #import "common/icons.typ": *
 #import "common/headings.typ": callHeading
 #import "common/pagesizes.typ": pagesizes, margins
-#import "common/tables.typ": *
+#import "common/tables.typ": tables
 
-#let schooldoc(
+#let book(
   // METADATA
   author: "",
   title: "",
-  subject: "",
-  section: "",
   code: "",
   date: datetime.today(),
   flags: (),
@@ -33,7 +31,7 @@
   // ELEMENT OPTIONS
   heading-numbering: "1.1.1",
   heading-prefix: none,
-  heading-style: "block",
+  heading-style: "book",
   heading-supplement: "Chapter",
   heading-scales: (1.5, 1.25, 1.125),
   outline-title: "Table of Contents",
@@ -136,8 +134,6 @@
     color.mix((colsc.bg, 100%/3), (white, 200%/3))
   } else {colsc.bg}}
 
-  // PAGE
-  #let marginval = 0.5in
   #set page(
     fill: colsc.bg,
     columns: doc-columns,
@@ -148,33 +144,6 @@
       pagesizes.at(paper, default: pagesizes.shortbond).at(1)
     } else {paper.at(1)},
     margin: margins.at(margin-mode),
-    footer: if(not flags.contains("nofoot")){align(bottom, move(
-      dx: if(margin-mode == "sunshine") { -1in }
-      else if (margin-mode == "pati") { -1.5in }
-      else {-0.5in},
-      
-      block(
-        inset: 0.5em,
-        width: if(margin-mode == "sunshine") { 100% + 2 * 1in }
-      else if (margin-mode == "pati") { 100% + 2 * 1.25in }
-      else {100% + 2 *0.5in},
-        height: 0.35in, fill: gradient.linear(angle: 90deg, colsc.la, colsc.ac))[
-      #set text(size: 18pt, fill: colsc.bg)
-      #rd-icon
-      #box(height: 100%, inset: (x: 0.5em, y: -0.5em))[
-        #align(horizon, text(size: font-size)[
-          #if (code != "") {
-            [#box(fill: colsc.bg.transparentize(80%), inset: (x: 1em / 3), outset: (y: 1em / 4), radius: 1em / 4, stroke: 5pt / 6 + colsc.bg, text(
-                5em / 6,
-                font: "Romeosevka",
-                code,
-              ))]
-          } #emph(strong(title))
-        ])
-      ]
-      #h(1fr)
-      #text(weight: 900, context counter(page).display())
-    ]))},
   )
 
   // potentially saved hundreds of lines by offloading heading styling to a different file
@@ -182,6 +151,7 @@
   #show heading: it => callHeading(
     scales: heading-scales,
     style: heading-style,
+    supplement: heading-supplement,
     heading-prefix,
     counter(heading).display(),
     heading-numbering,
@@ -200,7 +170,7 @@
   #set terms( hanging-indent: 1em,)
 
   #show terms.item: ti => [
-    - *#highlight(ti.term)*#h(0.5em) #ti.description
+    - *#highlight(ti.term)* #ti.description
   ]
 
   // TABLE OF CONTENTS
@@ -259,39 +229,6 @@
 
   // TABLES all handled by common/tables.typ
 
-  // DOCUMENT HEADER
-  #if(not flags.contains("noheader")){[
-      #let authorhl = gradient.linear(angle: 90deg, colsc.da, colsc.tx)
-      #let authorhl2 = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
-      #let authorhl3 = gradient.linear(angle: 90deg, colsc.it, colsc.la)
-    #show: align.with(center)
-    #[
-      #set text(fill: colsc.bg)
-      #if(type(author) == array) {
-        for aut in author {
-          exhl(authorhl)[
-            #icon("person")
-            #strong[#aut]
-            #if(section != "" and flags.contains("showsection")){emph[#"- "#section]}
-            ];
-          h(1em)
-        }; linebreak()
-      } else {exhl(authorhl)[
-        #icon("person")
-        #strong[#author]
-        #if(section != "" and flags.contains("showsection")){emph[#"- "#section]}
-        ]; linebreak();
-      }
-    ]
-    #if(subject != ""){exhl(authorhl2)[#set text(colsc.bg);#strong[#icon("school") #smallcaps[#subject]]]}
-    // #if(subject != "" and title != ""){[•]}
-    #if(title != ""){exhl(authorhl3)[#emph[#icon("docs") #title]]}
-    #if((subject != "" or title != "") and not flags.contains("compact-header")){linebreak()} else if (flags.contains("compact-header")) {"•"}
-    #if(code != ""){[#box(move(dy: 1pt, icon("tag"))) #raw(code) •]}
-    #icon("calendar_month") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
-    #line(length: 100%)
-  ]}
-  
   // DOCUMENT METADATA
   #let document-authors = ()
   #if(type(author) == array){
@@ -300,11 +237,10 @@
   #set document(
     author: if(type(author) == array){author.join("; ")}else{author},
     date: date,
-    title: code + " - " + subject + " - " + title,
+    title: code + " - " + " - " + title,
     keywords: (
       ..document-authors,
       code,
-      subject,
       title,
     )
   )
