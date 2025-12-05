@@ -26,7 +26,7 @@
   margin-mode: "standard",
   doc-columns: 1,
   colour-scheme: "default",
-  font-family: "Romeosevka",
+  font-family: "RomeosevkaQP",
   font-size: 12pt,
   line-spacing: 1,
   par-spacing: 1,
@@ -34,7 +34,6 @@
   math-font-scale: 6 / 5,
   bib-font-scale: 5 / 6,
   background-desaturate: false,
-  border-radii: (1em / 4),
 
   // ELEMENT OPTIONS
   heading-numbering: "1.1.1",
@@ -55,22 +54,19 @@
     colour-scheme = if (colour-scheme not in palette.keys()) { "default" } else { colour-scheme }
   }
   #let colsc = palette.at(colour-scheme)
-  #let authorhl = gradient.linear(angle: 90deg, colsc.da, colsc.tx)
-  #let authorhl1 = gradient.linear(angle: 90deg, colsc.ac, colsc.da)
-  #let authorhl2 = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
-  #let authorhl3 = gradient.linear(angle: 90deg, colsc.it, colsc.la)  
 
   // DATA PROCESSING
   // TEXT
   #set text(
-    font: (font-family, "Romeosevka", "RomeosevkaQP", "Iosevka", "Iosevka SS04"),
+    font: (font-family, "RomeosevkaQP", "Iosevka SS04"),
     size: font-size,
     fill: colsc.tx,
   )
 
   // FONT
   #show raw: set text(
-    font: ("Romeosevka", "Iosevka", "Iosevka SS04", "DejaVu Sans Mono"),
+    font: ("Romeosevka", "Iosevka SS04", "DejaVu Sans Mono"),
+    size: 1em,
   )
   //// RAW TEXT
   #show raw.where(block: false): rawtext => box(
@@ -79,7 +75,7 @@
     outset: (y: 1em / 4),
     radius: 1em / 4,
     stroke: 5pt / 6 + colsc.la.transparentize(100% / 3),
-    text(rawtext),
+    text(5em / 6, rawtext),
   )
   #show raw.where(block: true): rawblock => {
     show raw.line: rl => {
@@ -126,19 +122,11 @@
   )
 
   #let exhl(fill, body) = box(
-    fill: none,
-    inset: (x: 2pt,),
-    outset: (y: 1pt + 1em / 3),
-    radius: border-radii + 2pt,
-    stroke: 1pt+fill,
-    box(
     fill: fill,
-    inset: (x: -1pt + 1em / 3),
-    outset: (y: -1pt + 1em / 3),
-    radius: border-radii,
-    stroke: none,
+    inset: (x: 1em / 3),
+    outset: (y: 1em / 3),
+    radius: 1em / 4,
     body,
-  ),
   )
 
   #show ref: set text(fill: colsc.ac)
@@ -166,14 +154,6 @@
       pagesizes.at(paper, default: pagesizes.shortbond).at(1)
     } else {paper.at(1)},
     margin: margins.at(margin-mode),
-    header: [
-      #line(length: 100%,
-        stroke: (
-          paint: colsc.da,
-          dash: "dashed",
-        ),
-      )
-    ],
     footer: if(not flags.contains("nofoot")){align(bottom, move(
       dx: if(margin-mode == "sunshine") { -1in }
       else if (margin-mode == "pati") { -1.5in }
@@ -186,7 +166,7 @@
       else {100% + 2 *0.5in},
         height: 0.35in, fill: gradient.linear(angle: 90deg, colsc.la, colsc.ac))[
       #set text(size: 18pt, fill: colsc.bg)
-      #rd-icon
+      #if(not flags.contains("no-romeosymbols")){[#rd-icon]}else{h(-0.4em)}
       #box(height: 100%, inset: (x: 0.5em, y: -0.5em))[
         #align(horizon, text(size: font-size)[
           #if (code != "") {
@@ -285,54 +265,43 @@
 
   // TABLES all handled by common/tables.typ
 
-  // DOCUMENT IDENTIFICATION
-
-  #place(top+left,
-  dx: margins.at(margin-mode).left * -1,
-  dy: margins.at(margin-mode).top * -1
-  )[
-    #square(width: calc.min(0.5in, margins.at(margin-mode).left * 1/2), fill: none, stroke: 1pt + authorhl1 ,inset:2pt)[
-      #square(width: 100%, stroke: none, fill: authorhl1,)
-    ]
-  ]
-
   // DOCUMENT HEADER
   #if(not flags.contains("noheader")){[
-      
-    #show: align.with(left)
+      #let authorhl = gradient.linear(angle: 90deg, colsc.da, colsc.tx)
+      #let authorhl2 = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
+      #let authorhl3 = gradient.linear(angle: 90deg, colsc.it, colsc.la)
+    #show: align.with(center)
     #[
+      #set text(fill: colsc.bg)
       #if(type(author) == array) {
         for aut in author {
-          [
+          exhl(authorhl)[
             #icon("person")
             #strong[#aut]
             #if(section != "" and flags.contains("showsection")){emph[#"- "#section]}
             ];
-          h(1em/4)
-        }; linebreak
-      } else {[
-        #if(author.contains("Carlos Romeo")){rd-icon; h(1em/1.67)}else{icon("person")}
+          h(1em)
+        }; linebreak()
+      } else {exhl(authorhl)[
+        #if(author.contains("Carlos Romeo") and not flags.contains("no-romeosymbols")){rd-icon; h(1em/1.67)}else{icon("person")}
         #strong[#author]
         #if(section != "" and flags.contains("showsection")){emph[#"· "#section]}
         ]; linebreak();
       }
     ]
-    #if(subject != ""){exhl(authorhl)[#set text(colsc.bg);#strong[#icon(
+    #if(subject != ""){exhl(authorhl2)[#set text(colsc.bg);#strong[#icon(
       if(subject-icon == none) {
+        "school"
       } else {
         subject-icon
       }
-    ) #smallcaps[#subject]]]}#if(title != ""){exhl(authorhl1)[#text(colsc.bg)[#emph[#title]]]}
+    ) #smallcaps[#subject]]]}
+    // #if(subject != "" and title != ""){[•]}
+    #if(title != ""){exhl(authorhl3)[#emph[#icon("assignment") #title]]}
     #if((subject != "" or title != "") and not flags.contains("compact-header")){linebreak()} else if (flags.contains("compact-header")) {"•"}
-    #if(code != ""){[#raw(code) •]}
+    #if(code != ""){[#box(move(dy: 1pt, icon("code"))) #raw(code) •]}
     #icon("calendar_month") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
-    #v(-0.5em)
-    #line(length: 100%,
-        stroke: (
-          paint: colsc.tx,
-          dash: "dashed",
-        ),
-      )
+    #line(length: 100%)
   ]}
   
   // DOCUMENT METADATA

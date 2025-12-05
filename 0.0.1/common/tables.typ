@@ -5,6 +5,7 @@
   colour-scheme: "red",
   mode: "none",
   alternating: "none",
+  header-range: 1,
   columns: (),
   rows: (),
   gutter: (),
@@ -12,6 +13,7 @@
   row-gutter: (),
   alignment: horizon+center,
   stroke: auto,
+  width: 100%,
   border: false,
   inset: 0% + 5pt,
   ..children,
@@ -66,6 +68,7 @@
     }
   )
   block(
+    width: width,
     above: 3em/2,
     below: 4em/2,
     stroke: if (border) { 2pt + colsc.tx } else { none },
@@ -100,6 +103,12 @@
         } else {
           alternator(x, y)
         }
+      } else if (mode == "v2") {
+        if (y <= 1) {
+          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+        } else {
+          alternator(x, y)
+        }
       } else { alternator(x, y) },
       columns: columns,
       rows: rows,
@@ -118,6 +127,7 @@
 
 
 #let accentcell(colspan: 1, rowspan: 1, colour-scheme, body) = table.cell(
+  align: horizon + left, 
   colspan: colspan,
   rowspan: rowspan,
   fill: gradient.linear(palette.at(colour-scheme).la, palette.at(colour-scheme).ac, angle: 90deg),

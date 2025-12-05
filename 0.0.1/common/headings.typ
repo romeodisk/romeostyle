@@ -210,7 +210,7 @@
   body,
 ) = {
   block(spacing: 1em)[
-    #set text(size: 1em * scale, weight: 700);
+    #set text(size: 1em * scale, weight: 950);
     #prefix#number #body
   ]
 }

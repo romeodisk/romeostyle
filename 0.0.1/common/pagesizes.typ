@@ -18,7 +18,7 @@
 )
 
 #let margins = (
-  "standard": (x: 0.5in, y: 0.5in),
-  "sunshine": (x: 1in, y: 0.75in),
-  "pati": (left: 1.5in, rest: 1in),
+  "standard": (left: 0.5in, top: 0.75in, bottom: 0.75in, right: 0.5in,),
+  "sunshine": (left: 1in, top: 0.75in, bottom: 0.75in, right: 1in,),
+  "pati": (left: 1.5in, top: 1in, bottom: 1in, right: 1in,),
 )
