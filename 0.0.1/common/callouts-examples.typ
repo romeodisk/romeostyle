@@ -17,7 +17,7 @@
   
   #set par(justify: true)
   #let colsc = if (colour-scheme in palette.keys()) { palette.at(colour-scheme) } else { palette.at("default") }
-  #let laacgrad = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
+  #let laacgrad = gradient.linear(angle: 0deg, colsc.la, colsc.ac)
   #grid(
     columns: 1 * 100%,
     align: center,

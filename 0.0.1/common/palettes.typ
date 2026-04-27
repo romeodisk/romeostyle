@@ -295,15 +295,73 @@ KEY: TX: 950 || DA: 800 || AC: 600 || LA: 400 || IT: 200 || BG: 050
     it: tailwind.fuchsia-200.mix(tailwind.pink-200),
     bg: tailwind.pink-50,
   ),
+  "410st": (
+    tx: rgb("#001532"),
+    da: rgb("#013d7e"),
+    ac: rgb("#0280e3"),
+    la: rgb("#4dbefe"),
+    it: rgb("#a8e7fe"),
+    bg: rgb("#e5f9ff"),
+  ),
+  "411rz": (
+    tx: rgb("#360E23"),
+    da: rgb("#6E1C33"),
+    ac: rgb("#BA3830"),
+    la: rgb("#DA986E"),
+    it: rgb("#EDDFBA"),
+    bg: rgb("#F9F8E7"),
+  ),
+  "412pm": (
+    tx: rgb("#3D062A"),
+    da: rgb("#7F0D47"),
+    ac: rgb("#D61653"),
+    la: rgb("#EE5F71"),
+    it: rgb("#F7B5B0"),
+    bg: rgb("#FDECE7"),
+  ),
+  "413dm": (
+    tx: oklch(24.75%, 0.051, 175.11deg),
+    da: oklch(47.25%, 0.133, 165.77deg),
+    ac: oklch(74.24%, 0.226, 151.2deg),
+    la: oklch(86.42%, 0.188, 131.22deg),
+    it: oklch(94.23%, 0.063, 116.25deg),
+    bg: oklch(98.83%, 0.013, 106.64deg),
+  ),
+  "414mm": (
+    tx: rgb("#001749"),
+    da: rgb("#003095"),
+    ac: rgb("#485eff"),
+    la: rgb("#e76cde"),
+    it: rgb("#f3bee0"),
+    bg: rgb("#fcf0f5"),
+    bg2: rgb("#dbe7ff"),
+  ),
+  "415sp": (
+    tx: rgb("#260628"),
+    da: rgb("#5A0F6A"),
+    ac: rgb("#8C1CC3"),
+    la: rgb("#A55CE8"),
+    it: rgb("#CAB0F4"),
+    bg: rgb("#F1ECFC"),
+  ),
+  "416wd": (
+    tx: rgb("#230B38"),
+    da: rgb("#3F187A"),
+    ac: rgb("#5229D2"),
+    la: rgb("#877FE6"),
+    it: rgb("#C5C9F4"),
+    bg: rgb("#E0E2F9"),
+  ),
+
   
 )
-#set text(font: "Iosevka SS04", size: 10pt)
-#set page(margin: 0.25in, width: 6.5in, height: 8.5in, columns: 2)
+#set text(font: "Romeosevka", size: 10pt)
+#set page(margin: 0.25in, width: 6.5in, height: auto, columns: 2)
 #for col in palette {
   block(breakable: false)[
     #raw(col.at(0)); #v(-0.9em)
     #for i in col.at(1).values() {
-      box(square(stroke: 0pt + black, fill: i))
+      box(rect(height: 30pt,width: 30pt * 6/ col.at(1).values().len(), stroke: 0pt + black, fill: i))
     }]
   v(-0.5em)
 }

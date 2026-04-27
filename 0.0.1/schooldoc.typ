@@ -3,7 +3,7 @@
 #import "common/daterenderer.typ": datecoloursquare
 #import "common/icons.typ": *
 #import "common/headings.typ": callHeading
-#import "common/pagesizes.typ": pagesizes, margins
+#import "common/pagesizes.typ": margins, pagesizes
 #import "common/tables.typ": *
 
 #let st = super[st]
@@ -19,10 +19,10 @@
   code: "",
   date: datetime.today(),
   flags: (),
-
+  printing-info: "",
   // STYLING OPTIONS
   subject-icon: none,
-  paper: "shortbond",
+  paper: "a4",
   margin-mode: "standard",
   doc-columns: 1,
   colour-scheme: "default",
@@ -34,8 +34,8 @@
   math-font-scale: 6 / 5,
   bib-font-scale: 5 / 6,
   background-desaturate: false,
-  border-radii: (1em / 4),
-
+  border-radii: (1em / 8),
+  author-columns: 4,
   // ELEMENT OPTIONS
   heading-numbering: "1.1.1",
   heading-prefix: none,
@@ -58,7 +58,7 @@
   #let authorhl = gradient.linear(angle: 90deg, colsc.da, colsc.tx)
   #let authorhl1 = gradient.linear(angle: 90deg, colsc.ac, colsc.da)
   #let authorhl2 = gradient.linear(angle: 90deg, colsc.la, colsc.ac)
-  #let authorhl3 = gradient.linear(angle: 90deg, colsc.it, colsc.la)  
+  #let authorhl3 = gradient.linear(angle: 90deg, colsc.it, colsc.la)
 
   // DATA PROCESSING
   // TEXT
@@ -66,6 +66,7 @@
     font: (font-family, "Romeosevka", "RomeosevkaQP", "Iosevka", "Iosevka SS04"),
     size: font-size,
     fill: colsc.tx,
+    stretch: if(flags.contains("condensed-font")){50%}else if(flags.contains("semicondensed-font")){90%}else{100%},
   )
 
   // FONT
@@ -84,15 +85,15 @@
   #show raw.where(block: true): rawblock => {
     show raw.line: rl => {
       block(radius: 1em, spacing: -0.75em / 2, width: 100%, inset: 0em, grid(
-        columns: (if(not flags.contains("no-raw-linenumbers")){2em}else{0em}, 1fr),
+        columns: (if (not flags.contains("no-raw-linenumbers")) { 2em } else { 0em }, 1fr),
         rows: auto,
-        inset: (y: 1em/3, x: 0.5em),
+        inset: (y: 1em / 3, x: 0.5em),
         align: (horizon + right, horizon + left),
         fill: if (calc.even(rl.number)) { colsc.bg } else { colsc.it.mix(colsc.bg).mix(colsc.bg) },
-        [#if(not flags.contains("no-raw-linenumbers")){[#text(fill: colsc.ac, size: 2em / 3)[#rl.number]]}], rl.body,
+        [#if (not flags.contains("no-raw-linenumbers")) { [#text(fill: colsc.ac, size: 2em / 3)[#rl.number]] }], rl.body,
       ))
     }
-    set par(leading: 1em/2);
+    set par(leading: 1em / 2)
     rawblock
   }
   #show raw.where(block: true): rawblock => align(center, block(
@@ -112,7 +113,7 @@
   // MATH TEXT
   #show math.equation: set text(
     font: "New Computer Modern Math",
-    size: font-size * 1.125 ,
+    size: font-size * 1.125,
   )
   #show math.equation.where(block: true): set text(
     size: font-size * math-font-scale,
@@ -125,82 +126,92 @@
     extent: (1em / 4),
   )
 
-  #let exhl(fill, body) = box(
+  #let exhl(fill, body, strokemul: 1) = box(
     fill: none,
-    inset: (x: 2pt,),
-    outset: (y: 1pt + 1em / 3),
+    inset: (x: 2pt),
+    outset: (y: (1pt + 1em / 3)),
     radius: border-radii + 2pt,
-    stroke: 1pt+fill,
+    stroke: (strokemul * 1pt) + fill,
     box(
-    fill: fill,
-    inset: (x: -1pt + 1em / 3),
-    outset: (y: -1pt + 1em / 3),
-    radius: border-radii,
-    stroke: none,
-    body,
-  ),
+      fill: fill,
+      inset: (x: -1pt + 1em / 3),
+      outset: (y: -1pt + 1em / 3),
+      radius: border-radii,
+      stroke: none,
+      body,
+    ),
   )
 
   #show ref: set text(fill: colsc.ac)
 
   // PARAGRAPHS
   #set par(
-    justify: true,
-    leading: 0.75em * line-spacing,
-    spacing: 2em * par-spacing,
+    justify: if(not flags.contains("unjustify")){true}else{false},
+    leading: 5em/6 * line-spacing,
+    spacing: 2*5em/6 * par-spacing,
   )
 
-  #{colsc.bg = if(background-desaturate) {
-    color.mix((colsc.bg, 100%/3), (white, 200%/3))
-  } else {colsc.bg}}
+  #{
+    colsc.bg = if (background-desaturate) {
+      color.mix((colsc.bg, 100% / 3), (white, 200% / 3))
+    } else { colsc.bg }
+  }
 
   // PAGE
   #let marginval = 0.5in
   #set page(
-    fill: colsc.bg,
+    fill: if(colsc.at("bg2", default: none) != none){gradient.linear(colsc.bg, colsc.bg2, angle: 45deg)}else{colsc.bg},
     columns: doc-columns,
-    width: if(not (type(paper) == array and paper.len() == 2)) {
+    width: if (not (type(paper) == array and paper.len() == 2)) {
       pagesizes.at(paper, default: pagesizes.shortbond).at(0)
-    } else {paper.at(0)},
-    height: if(not (type(paper) == array and paper.len() == 2)) {
+    } else { paper.at(0) },
+    height: if (not (type(paper) == array and paper.len() == 2)) {
       pagesizes.at(paper, default: pagesizes.shortbond).at(1)
-    } else {paper.at(1)},
+    } else { paper.at(1) },
     margin: margins.at(margin-mode),
     header: [
-      #line(length: 100%,
-        stroke: (
-          paint: colsc.da,
-          dash: "dashed",
-        ),
-      )
+      #line(length: 100%, stroke: (
+        paint: colsc.da,
+        dash: "dashed",
+      ))
     ],
-    footer: if(not flags.contains("nofoot")){align(bottom, move(
-      dx: if(margin-mode == "sunshine") { -1in }
-      else if (margin-mode == "pati") { -1.5in }
-      else {-0.5in},
-      
-      block(
-        inset: 0.5em,
-        width: if(margin-mode == "sunshine") { 100% + 2 * 1in }
-      else if (margin-mode == "pati") { 100% + 2 * 1.25in }
-      else {100% + 2 *0.5in},
-        height: 0.35in, fill: gradient.linear(angle: 90deg, colsc.la, colsc.ac))[
-      #set text(size: 18pt, fill: colsc.bg)
-      #rd-icon
-      #box(height: 100%, inset: (x: 0.5em, y: -0.5em))[
-        #align(horizon, text(size: font-size)[
-          #if (code != "") {
-            [#box(fill: colsc.bg.transparentize(80%), inset: (x: 1em / 3), outset: (y: 1em / 4), radius: 1em / 4, stroke: 5pt / 6 + colsc.bg, text(
-                5em / 6,
-                font: "Romeosevka",
-                code,
-              ))]
-          } #emph(strong(title))
-        ])
-      ]
-      #h(1fr)
-      #text(weight: 900, context counter(page).display())
-    ]))},
+    footer: if (not flags.contains("nofoot")) {
+      align(bottom, move(
+        dx: margins.at(margin-mode).left * -1,
+
+        block(
+          inset: (x: 0.5em,),
+          width: 100% + margins.at(margin-mode).right * 2,
+          height: 0.25in,
+          fill: gradient.linear(angle: 0deg, colsc.la, colsc.ac),
+        )[
+          #show: align.with(horizon)
+          #set text(size: 12pt, fill: colsc.bg)
+
+            #text(size: font-size)[
+              #uc-logo #h(2em / 3)
+              #if (code != "") {
+                [#box(
+                  fill: colsc.bg.transparentize(80%),
+                  inset: (x: 1em / 6),
+                  outset: (top: 1em / 4 + 1em / 12, bottom: 1pt + 1em/12),
+                  radius: 1em / 4,
+                  stroke: 2pt/3 + colsc.bg.transparentize(50%),
+                  text(
+                    4em / 6,
+                    font: "Romeosevka",
+                    code,
+                    baseline: -1pt
+                  ),
+                )]
+              } #strong(title)
+              #h(1fr) #text(size: font-size, weight: 900, context counter(page).display())
+            ]
+          ]
+
+        
+      ))
+    },
   )
 
   // potentially saved hundreds of lines by offloading heading styling to a different file
@@ -223,7 +234,7 @@
     #strong[#numbering("1.1.1.", ..nums)]
   ])
 
-  #set terms( hanging-indent: 1em,)
+  #set terms(hanging-indent: 1em)
 
   #show terms.item: ti => [
     - *#highlight(ti.term)*#h(0.5em) #ti.description
@@ -237,7 +248,7 @@
 
   #show outline: out => {
     show heading: none
-    callHeading(none, text(2em * 0.75, icon(offset: 5em/12, "toc")), none, palette.at(colour-scheme), 1, align(center, text(
+    callHeading(none, text(2em * 0.75, icon(offset: 5em / 12, "toc")), none, palette.at(colour-scheme), 1, align(center, text(
       size: 1.5em,
       outline.title,
     )))
@@ -269,7 +280,7 @@
       scales: heading-scales,
       style: heading-style,
       none,
-      text(size: 2em * 0.75, (icon(offset: if(heading-style == "plain") { 0em} else {5em/12}, "book"))),
+      text(size: 2em * 0.75, (icon(offset: if (heading-style == "plain") { 0em } else { 5em / 12 }, "book"))),
       none,
       palette.at(colour-scheme),
       1,
@@ -282,73 +293,84 @@
   // SHAPES AND STROKES
   #set square(stroke: 1pt + colsc.tx)
   #set line(stroke: 1pt + colsc.tx)
+  #set strong(delta: 500)
 
   // TABLES all handled by common/tables.typ
 
   // DOCUMENT IDENTIFICATION
 
-  #place(top+left,
-  dx: margins.at(margin-mode).left * -1,
-  dy: margins.at(margin-mode).top * -1
-  )[
-    #square(width: calc.min(0.5in, margins.at(margin-mode).left * 1/2), fill: none, stroke: 1pt + authorhl1 ,inset:2pt)[
-      #square(width: 100%, stroke: none, fill: authorhl1,)
+  #if(author.contains("Carlos Romeo") and type(author) == str){place(top + left, dx: 1pt/2+ margins.at(margin-mode).left * -1, dy: 1pt/2 + margins.at(margin-mode).top * -1)[
+    #circle(width: 0.25in, fill: none, stroke: 1pt + authorhl2, inset: -1.5pt,)[
+      #circle(width: 100%, stroke: none, inset: 0em, fill: authorhl2)[
+        #show: place.with(horizon + center, dx: -3.25pt, dy: -0.25pt)
+        #show: text.with(fill:colsc.bg, size: 1.2em)
+        #rd-icon
+      ]
     ]
-  ]
+
+  ]}
 
   // DOCUMENT HEADER
-  #if(not flags.contains("noheader")){[
-      
-    #show: align.with(left)
-    #[
-      #if(type(author) == array) {
-        for aut in author {
+  #if (not flags.contains("noheader")) {
+    [
+      #set par(justify: if(not flags.contains("centre-head")){true}else{false})
+      #show: align.with(if(not flags.contains("centre-head")){left}else{center})
+      #[
+        #if (type(author) == array) {
+          let coltype = (auto,)
+          coltype.push(..(1fr,) * (author-columns - 1))
+          table(
+            stroke: none,
+            inset: (y: 1em / 3),
+            columns: (auto,) * author-columns,
+            ..author.map(aut => [#icon("person") #strong[#aut] #if (section != "" and flags.contains("showsection")) { emph[#"- "#section] }])
+          )
+          v(-1em)
+        } else {
           [
-            #icon("person")
-            #strong[#aut]
-            #if(section != "" and flags.contains("showsection")){emph[#"- "#section]}
-            ];
-          h(1em/4)
-        }; linebreak
-      } else {[
-        #if(author.contains("Carlos Romeo")){rd-icon; h(1em/1.67)}else{icon("person")}
-        #strong[#author]
-        #if(section != "" and flags.contains("showsection")){emph[#"· "#section]}
-        ]; linebreak();
-      }
+            #if (author.contains("Carlos Romeo")) {
+              rd-icon
+              h(1em / 1.67)
+            } else { icon("person") }
+            #strong[#author]
+            #if (section != "" and flags.contains("showsection")) { emph[#"· "#section] }
+          ]
+          linebreak()
+        }
+      ]
+      #if (subject != "") {
+        exhl(authorhl)[#set text(colsc.bg, weight: 900);#strong[#icon(
+              if (subject-icon == none) {} else {
+                subject-icon
+              },
+            ) #smallcaps[#subject]]]
+      } #if (title != "") { exhl(authorhl1)[#text(colsc.bg, weight: 600)[#emph[#title]]] }
+      #if ((subject != "" or title != "") and not flags.contains("compact-header")) { linebreak() } else if (flags.contains("compact-header")) { "•" }
+      #if (code != "") { [#raw(code) •] }
+      #icon("calendar_month") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
+      #if(printing-info != ""){[• #icon("print") #printing-info]}
+      #v(-0.5em)
+      #line(length: 100%, stroke: (
+        paint: colsc.tx,
+        dash: "dashed",
+      ))
     ]
-    #if(subject != ""){exhl(authorhl)[#set text(colsc.bg);#strong[#icon(
-      if(subject-icon == none) {
-      } else {
-        subject-icon
-      }
-    ) #smallcaps[#subject]]]}#if(title != ""){exhl(authorhl1)[#text(colsc.bg)[#emph[#title]]]}
-    #if((subject != "" or title != "") and not flags.contains("compact-header")){linebreak()} else if (flags.contains("compact-header")) {"•"}
-    #if(code != ""){[#raw(code) •]}
-    #icon("calendar_month") #date.display("[day padding:zero] [month repr:short]. [year repr:full]") #datecoloursquare(date, font-size * 1.125)
-    #v(-0.5em)
-    #line(length: 100%,
-        stroke: (
-          paint: colsc.tx,
-          dash: "dashed",
-        ),
-      )
-  ]}
-  
+  }
+
   // DOCUMENT METADATA
   #let document-authors = ()
-  #if(type(author) == array){
-    for aut in author {document-authors.push(aut)}
-  }else{document-authors.push(author)}
+  #if (type(author) == array) {
+    for aut in author { document-authors.push(aut) }
+  } else { document-authors.push(author) }
   #set document(
-    author: if(type(author) == array){author.join("; ")}else{author},
+    author: if (type(author) == array) { author.join("; ") } else { author },
     title: code + " - " + subject + " - " + title,
     keywords: (
       ..document-authors,
       repr(code),
       repr(subject),
       repr(title),
-    )
+    ),
   )
 
   #body

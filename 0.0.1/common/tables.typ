@@ -25,6 +25,10 @@
   }
   colour-scheme = if (colour-scheme not in palette.keys()) { "default" } else { colour-scheme }
   let colsc = palette.at(colour-scheme)
+  let grad0 = gradient.linear(angle: 90deg, colsc.tx, colsc.tx.darken(50%));
+  let grad1 = gradient.linear(angle: 90deg, colsc.da.mix(colsc.tx), colsc.da.mix(colsc.tx).mix(colsc.tx));
+  let grad2 = gradient.linear(angle: 90deg, colsc.it.mix(colsc.bg).mix(colsc.it), colsc.it);
+  let grad3 = gradient.linear(angle: 90deg, colsc.bg, colsc.it.mix(colsc.bg));
   show table.cell: tc => if (mode == "h") {
     if (tc.x == 0) {
       set text(fill: colsc.bg, weight: "bold")
@@ -58,15 +62,16 @@
   } else { tc }
   let alternator(x, y) = (
     if (alternating) == "h" {
-      if (calc.even(y)) { return colsc.it } else { return colsc.bg }
+      if (calc.even(y)) { return grad2 } else { return grad3 }
     } else if (alternating == "v") {
-      if (calc.even(x)) { return colsc.it } else { return colsc.bg }
+      if (calc.even(x)) { return grad2 } else { return grad3 }
     } else if (alternating == "hv") {
-      if (calc.even(x + y)) { return colsc.it } else { return colsc.bg }
+      if (calc.even(x + y)) { return grad2 } else { return grad3 }
     } else {
-      return colsc.bg
+      return grad3
     }
   )
+  
   block(
     width: width,
     above: 3em/2,
@@ -75,37 +80,37 @@
     table(
       fill: (x, y) => if (mode == "hv") {
         if (x == 0 or y == 0) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }
       } else if (mode == "hv2") {
         if (x == 0 or y <= 1) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }
       } else if (mode == "hv3") {
         if (x == 0 or y <= 2) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }
       } else if (mode == "h") {
         if (x == 0) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }
       } else if (mode == "v") {
         if (y == 0) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }
       } else if (mode == "v2") {
         if (y <= 1) {
-          if (calc.odd(x + y + 1)) { colsc.tx } else { colsc.da.mix(colsc.tx) }
+          if (calc.odd(x + y + 1)) { grad0 } else { grad1 }
         } else {
           alternator(x, y)
         }

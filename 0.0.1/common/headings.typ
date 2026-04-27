@@ -1,6 +1,6 @@
 #import "palettes.typ": palette
 
-#let headingGrad(col1, col2) = gradient.linear(angle: 90deg, col1, col2)
+#let headingGrad(col1, col2) = gradient.linear(angle: 0deg, col1, col2)
 
 #let blockHeading(
   number: context counter(heading).display(),
