@@ -23,7 +23,7 @@
       columns: (auto, 1fr),
       align: horizon,
       grid.cell(fill: col1)[#prefix#number],
-      grid.cell(fill: headingGrad(col2, col1))[#body],
+      grid.cell(fill: headingGrad(col2, col1))[#smallcaps(body)],
     )
   ]
 ]

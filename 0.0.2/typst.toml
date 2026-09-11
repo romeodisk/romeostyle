@@ -1,0 +1,7 @@
+[package]
+name = "romeostyle"
+version = "0.0.2"
+entrypoint = "main.typ"
+authors = ["romeodisk"]
+license = "PENIS-LICENCE"
+description = "romeodisk's style files"

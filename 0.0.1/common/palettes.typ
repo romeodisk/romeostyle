@@ -352,11 +352,59 @@ KEY: TX: 950 || DA: 800 || AC: 600 || LA: 400 || IT: 200 || BG: 050
     it: rgb("#C5C9F4"),
     bg: rgb("#E0E2F9"),
   ),
-
-  
+  "420tp": (
+    tx: rgb("#0E0721"),
+    da: rgb("#14135B"),
+    ac: rgb("#2450A8"),
+    la: oklch(70.73%, 0.11, 210.08deg),
+    it: oklch(89.29%, 0.071, 195.95deg),
+    bg: rgb("#E5FAF5"),
+    bg2: rgb("#d7f7e7"),
+  ),
+  "421aa": (
+    tx: oklch(20.28%, 0.059, 285.68deg),
+    da: oklch(30.84%, 0.11, 284.21deg),
+    ac: oklch(43.98%, 0.168, 283.21deg),
+    la: oklch(61.33%, 0.132, 288.58deg),
+    it: oklch(80.96%, 0.063, 292.06deg),
+    bg: oklch(94.81%, 0.016, 293.75deg),
+  ),
+  "422si": (
+    tx: rgb("#260A1B"),
+    da: oklch(36.6%, 0.103, 356deg),
+    ac: oklch(52.82%, 0.152, 20.29deg),
+    la: oklch(70.85%, 0.15, 52.57deg),
+    it: oklch(84.31%, 0.1, 69.72deg),
+    bg: oklch(97.77%, 0.019, 86.86deg),
+  ),
+  "423ip": (
+    tx: rgb("#1A092D"),
+    da: rgb("#47125A"),
+    ac: rgb("#871B62"),
+    la: rgb("#D52F69"),
+    it: rgb("#EC9FB3"),
+    bg: rgb("#fbf3ea"),
+    bg2: rgb("#FAE7EB"),
+  ),
+  "424se": (
+    tx: oklch(22.9%, 0.08, 264.96deg),
+    da: oklch(36.98%, 0.093, 248.84deg),
+    ac: oklch(62.71%, 0.117, 189.46deg),
+    la: oklch(77.86%, 0.2, 168deg),
+    it: oklch(89.47%, 0.11, 153.22deg),
+    bg: oklch(97.13%, 0.027, 144.97deg),
+  ),
+  "425fl": (
+    tx: oklch(20.28%, 0.059, 285.68deg + 60deg),
+    da: oklch(30.84%, 0.110, 284.21deg + 60deg),
+    ac: oklch(43.98%, 0.168, 283.21deg + 60deg),
+    la: oklch(61.33%, 0.132, 288.58deg + 60deg),
+    it: oklch(80.96%, 0.063, 292.06deg + 60deg),
+    bg: oklch(94.81%, 0.016, 293.75deg + 60deg),
+  ),
 )
 #set text(font: "Romeosevka", size: 10pt)
-#set page(margin: 0.25in, width: 6.5in, height: auto, columns: 2)
+#set page(margin: 0.25in, width: 6.5in, height: 13in, columns: 2)
 #for col in palette {
   block(breakable: false)[
     #raw(col.at(0)); #v(-0.9em)

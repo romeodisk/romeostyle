@@ -89,7 +89,10 @@
         rows: auto,
         inset: (y: 1em / 3, x: 0.5em),
         align: (horizon + right, horizon + left),
-        fill: if (calc.even(rl.number)) { colsc.bg } else { colsc.it.mix(colsc.bg).mix(colsc.bg) },
+        fill: if (calc.even(rl.number)) { colsc.bg } else { color.mix(
+          (colsc.it, 20%),
+          (colsc.bg, 80%)
+        ) },
         [#if (not flags.contains("no-raw-linenumbers")) { [#text(fill: colsc.ac, size: 2em / 3)[#rl.number]] }], rl.body,
       ))
     }
@@ -121,7 +124,7 @@
 
   // HIGHLIGHTS
   #set highlight(
-    fill: gradient.linear(angle: 90deg, colsc.it, colsc.la),
+    fill: gradient.linear(angle: 90deg, colsc.it.transparentize(50%), colsc.la.transparentize(50%)),
     radius: 1em / 3,
     extent: (1em / 4),
   )
@@ -146,7 +149,7 @@
 
   // PARAGRAPHS
   #set par(
-    justify: if(not flags.contains("unjustify")){true}else{false},
+    justify: if(flags.contains("unjustify")){false}else{true},
     leading: 5em/6 * line-spacing,
     spacing: 2*5em/6 * par-spacing,
   )
@@ -172,7 +175,7 @@
     header: [
       #line(length: 100%, stroke: (
         paint: colsc.da,
-        dash: "dashed",
+        dash: "solid",
       ))
     ],
     footer: if (not flags.contains("nofoot")) {
@@ -189,7 +192,7 @@
           #set text(size: 12pt, fill: colsc.bg)
 
             #text(size: font-size)[
-              #uc-logo #h(2em / 3)
+              #rd-icon
               #if (code != "") {
                 [#box(
                   fill: colsc.bg.transparentize(80%),
@@ -299,14 +302,8 @@
 
   // DOCUMENT IDENTIFICATION
 
-  #if(author.contains("Carlos Romeo") and type(author) == str){place(top + left, dx: 1pt/2+ margins.at(margin-mode).left * -1, dy: 1pt/2 + margins.at(margin-mode).top * -1)[
-    #circle(width: 0.25in, fill: none, stroke: 1pt + authorhl2, inset: -1.5pt,)[
-      #circle(width: 100%, stroke: none, inset: 0em, fill: authorhl2)[
-        #show: place.with(horizon + center, dx: -3.25pt, dy: -0.25pt)
-        #show: text.with(fill:colsc.bg, size: 1.2em)
-        #rd-icon
-      ]
-    ]
+  #if(author.contains("Carlos Romeo") and type(author) == str){place(top + left, dx: margins.at(margin-mode).left * -1, dy: 1pt/2 + margins.at(margin-mode).top * -1)[
+        #text(fill: authorhl2, size: 24pt, baseline: -1pt, font: "Romeosymbols", "s", )
 
   ]}
 
@@ -316,7 +313,7 @@
       #set par(justify: if(not flags.contains("centre-head")){true}else{false})
       #show: align.with(if(not flags.contains("centre-head")){left}else{center})
       #[
-        #if (type(author) == array) {
+        #if (type(author) == array and flags.contains("author-columns")) {
           let coltype = (auto,)
           coltype.push(..(1fr,) * (author-columns - 1))
           table(
@@ -326,11 +323,14 @@
             ..author.map(aut => [#icon("person") #strong[#aut] #if (section != "" and flags.contains("showsection")) { emph[#"- "#section] }])
           )
           v(-1em)
+        } else if (type(author) == array){
+          for aut in author {box[#icon("person") #strong[#aut] #if (section != "" and flags.contains("showsection")) { emph[#"- "#section ] }]; h(1em, weak: true)}
+          v(-0.8em)
+        
         } else {
           [
             #if (author.contains("Carlos Romeo")) {
               rd-icon
-              h(1em / 1.67)
             } else { icon("person") }
             #strong[#author]
             #if (section != "" and flags.contains("showsection")) { emph[#"· "#section] }
@@ -352,7 +352,7 @@
       #v(-0.5em)
       #line(length: 100%, stroke: (
         paint: colsc.tx,
-        dash: "dashed",
+        dash: "solid",
       ))
     ]
   }

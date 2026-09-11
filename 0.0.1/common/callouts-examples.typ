@@ -12,8 +12,9 @@
   alignment: center,
   width: 500% / 6,
   border: true,
+  canBreak: false,
   body,
-) = [
+) = block(breakable: canBreak)[
   
   #set par(justify: true)
   #let colsc = if (colour-scheme in palette.keys()) { palette.at(colour-scheme) } else { palette.at("default") }
